@@ -1,20 +1,24 @@
-#!/bin/bash
-
-set -e
-
-echo "[+] Adicionando chave e repositório do FRRouting..."
-curl -s https://deb.frrouting.org/frr/keys.gpg | sudo tee /usr/share/keyrings/frrouting.gpg > /dev/null
+curl -s https://deb.frrouting.org/frr/keys.gpg | tee /usr/share/keyrings/frrouting.gpg > /dev/null
 FRRVER="frr-stable"
-echo "deb [signed-by=/usr/share/keyrings/frrouting.gpg] https://deb.frrouting.org/frr $(lsb_release -sc) $FRRVER" | sudo tee /etc/apt/sources.list.d/frr.list
-
-echo "[+] Atualizando pacotes e instalando FRRouting..."
-sudo apt update && sudo apt -y install frr frr-pythontools
-
-echo "[+] Habilitando daemon BGP..."
-sudo sed -i 's/^bgpd=no/bgpd=yes/' /etc/frr/daemons
-
-echo "[+] Gerando configuração do FRR..."
-sudo tee /etc/frr/frr.conf > /dev/null <<EOF
+echo "deb [signed-by=/usr/share/keyrings/frrouting.gpg] https://deb.frrouting.org/frr $(lsb_release -s -c) $FRRVER" |  tee -a /etc/apt/sources.list.d/frr.list
+echo "Instalando FRRouting..."
+    apt -y install frr frr-pythontools
+    
+    # Habilitar BGP daemon
+    sed -i 's/bgpd=no/bgpd=yes/' /etc/frr/daemons
+    
+    # Gerar configuração do FRR
+    echo "Gerando configuração do FRR..."
+    cat > /etc/frr/frr.conf << EOF
+echo "Instalando FRRouting..."
+    apt -y install frr frr-pythontools
+    
+    # Habilitar BGP daemon
+    sed -i 's/bgpd=no/bgpd=yes/' /etc/frr/daemons
+    
+    # Gerar configuração do FRR
+    echo "Gerando configuração do FRR..."
+    cat > /etc/frr/frr.conf << EOF
 frr version 9.1
 frr defaults traditional
 log syslog informational
@@ -46,8 +50,5 @@ exit
 !
 EOF
 
-echo "[+] Reiniciando serviço FRR..."
-sudo systemctl restart frr
-sudo systemctl enable frr
-
-echo "[✓] FRRouting instalado e BGP configurado com sucesso."
+systemctl restart frr
+   wget -qO- https://raw.githubusercontent.com/franklinferre/scripts/refs/heads/main/frr.sh | bash
