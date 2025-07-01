@@ -1,8 +1,10 @@
+apt update && apt install curl lsb-release -y
+
 curl -s https://deb.frrouting.org/frr/keys.gpg | tee /usr/share/keyrings/frrouting.gpg > /dev/null
 FRRVER="frr-stable"
 echo "deb [signed-by=/usr/share/keyrings/frrouting.gpg] https://deb.frrouting.org/frr $(lsb_release -s -c) $FRRVER" |  tee -a /etc/apt/sources.list.d/frr.list
 echo "Instalando FRRouting..."
-    apt -y install frr frr-pythontools
+    apt update && apt -y install frr frr-pythontools
     
     # Habilitar BGP daemon
     sed -i 's/bgpd=no/bgpd=yes/' /etc/frr/daemons
