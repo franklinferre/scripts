@@ -50,4 +50,4 @@ exit
 EOF
 
 systemctl restart frr
-   wget -qO- https://raw.githubusercontent.com/franklinferre/scripts/refs/heads/main/frr.sh | bash
+
