@@ -41,6 +41,7 @@ exit
 !
 ip prefix-list RR-IPV4-IN seq 5 deny any
 ip prefix-list RR-IPV4-OUT seq 5 permit 186.208.0.0/20 le 32
+ip prefix-list RR-IPV4-OUT seq 5 permit 172.64.0.0/20 le 32
 ip prefix-list BLOQUEIA-TUDO seq 5 deny any
 !
 route-map SET-COMMUNITY permit 10
