@@ -11,7 +11,8 @@ echo deb '[signed-by=/usr/share/keyrings/frrouting.gpg]' https://deb.frrouting.o
      $(lsb_release -s -c) $FRRVER | sudo tee -a /etc/apt/sources.list.d/frr.list
 
 # update and install FRR
-sudo apt update && sudo apt install frr frr-pythontools
+sudo apt update
+sudo apt upgrade -y && sudo apt install frr frr-pythontools -y
 # Habilitar BGP daemon
 sed -i 's/bgpd=no/bgpd=yes/' /etc/frr/daemons
 
