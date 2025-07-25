@@ -41,13 +41,13 @@ validate_ip() {
 
 # Função para listar interfaces de rede (excluindo loopback e virtuais)
 list_network_interfaces() {
-    print_info "Listando interfaces de rede disponíveis..."
-    local interfaces=($(ip -o link show | awk -F': ' '{print $2}' | grep -v lo | grep -v '@' | sort))
+    local interfaces=($(ip -o link show | awk -F': ' '{print $2}' | grep -v lo | grep -v '@' | grep -v docker | grep -v veth | grep -v br- | sort))
     echo "${interfaces[@]}"
 }
 
 # Função para selecionar interface
 select_interface() {
+    print_info "Listando interfaces de rede disponíveis..."
     local interfaces=($(list_network_interfaces))
     
     if [[ ${#interfaces[@]} -eq 0 ]]; then
