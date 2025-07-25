@@ -348,19 +348,30 @@ make_ip_persistent() {
         
         # Verificar se já existe configuração para esta interface
         if [[ -f "$netplan_file" ]]; then
-            print_warning "Arquivo netplan já existe, fazendo backup..."
-            cp "$netplan_file" "${netplan_file}.backup.$(date +%s)"
-        fi
-        
-        cat > "$netplan_file" << EOF
+            print_info "Arquivo netplan já existe, adicionando IP à configuração existente..."
+            
+            # Verificar se IP já está no arquivo
+            if grep -q "$ip_cidr" "$netplan_file"; then
+                print_warning "IP $ip_cidr já está no arquivo netplan"
+                return 0
+            fi
+            
+            # Adicionar IP à lista existente
+            sed -i "/addresses:/a\\        - ${ip_cidr}" "$netplan_file"
+            print_success "IP $ip_cidr adicionado ao netplan existente"
+        else
+            # Criar novo arquivo preservando DHCP
+            cat > "$netplan_file" << EOF
 network:
   version: 2
   ethernets:
     ${interface}:
+      dhcp4: true
       addresses:
         - ${ip_cidr}
 EOF
-        print_success "Configuração netplan criada em: $netplan_file"
+            print_success "Configuração netplan criada em: $netplan_file"
+        fi
         
     # Para sistemas com interfaces (Debian/Ubuntu mais antigos)
     elif [[ -f /etc/network/interfaces ]]; then
